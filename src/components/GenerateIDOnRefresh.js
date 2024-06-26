@@ -9,27 +9,24 @@ const GenerateIDOnRefresh = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const hash = location.hash.substring(1); // Remove the # from the hash
-    console.log('Current hash:', hash);
+    const hash = location.hash.substring(1);
 
     if (!hash) {
-      // If no ID in the URL, generate a new one
       const newId = uuidv4();
-      console.log('Generated new ID:', newId);
       navigate(`#${newId}`, { replace: true });
     } else {
       // Check if the ID already exists in Firebase
-      db_database.ref(`ids/${hash}`).once('value').then(snapshot => {
-        if (!snapshot.exists()) {
+      // db_database.ref(`ids/${hash}`).once('value').then(snapshot => {
+        // if (!snapshot.exists()) {
           // If the ID does not exist, save it to Firebase
-          console.log('ID does not exist in Firebase. Saving new ID:', hash);
-          db_database.ref(`ids/${hash}`).set(true);
-        } else {
-          console.log('ID already exists in Firebase:', hash);
-        }
-      }).catch(error => {
-        console.error('Error checking ID in Firebase:', error);
-      });
+          // console.log('ID does not exist in Firebase. Saving new ID:', hash);
+          // db_database.ref(`ids/${hash}`).set(true);
+        // } else {
+          // console.log('ID already exists in Firebase:', hash);
+        // }
+      // }).catch(error => {
+        // console.error('Error checking ID in Firebase:', error);
+      // });
     }
   }, [navigate, location]);
 
