@@ -21,6 +21,7 @@ const HeroSection = () => {
 
   useEffect(() => {
     if (hash) {
+      setInputText("");
       getData(hash, setInputText);
     }
   }, [hash]);
