@@ -1,34 +1,43 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import {addKeyInDB, getData} from "../Utils"
+import { addKeyInDB, getData } from "../Utils";
+
 const HeroSection = () => {
-  const [inputText, setInputText] = useState("")
+  const [inputText, setInputText] = useState("");
+  const [hash, setHash] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  var hash = "";
 
-  useEffect(()=>{
-     hash = location.hash.substring(1);
-    if (!hash) {
-      // If no ID in the URL, generate a new one
+  useEffect(() => {
+    let currentHash = location.hash.substring(1);
+    if (!currentHash) {
       const newId = uuidv4();
       navigate(`#${newId}`, { replace: true });
+      currentHash = newId;
     }
-    if(hash){
-      addKeyInDB(hash)
-      getData(hash, setInputText)
-    }
+    setHash(currentHash);
   }, [navigate, location]);
 
-  // const currentId = location.hash.substring(1);
+  useEffect(() => {
+    if (hash) {
+      getData(hash, setInputText);
+    }
+  }, [hash]);
 
-  // console.log(currentId,"current id")
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputText(value);
+    if (hash) {
+      addKeyInDB(hash, setInputText, value);
+    }
+  };
+
   return (
     <>
-    <input value={inputText} onChange={e => {setInputText(e.target.value); addKeyInDB(hash, e.target.value)}}/>
+      <input value={inputText} onChange={handleInputChange} />
     </>
-  )
-}
+  );
+};
 
-export default HeroSection
+export default HeroSection;
